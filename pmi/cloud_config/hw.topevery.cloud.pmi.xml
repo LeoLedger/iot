@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<runtimeSection pathName="classpath:/glb.json">
+    <application id="50001" name="精细化V1.0"/>
+
+    <!--系统配置-->
+    <actionElCollectoin>
+        <el name="hw.shiro" valueType="json">
+            <![CDATA[
+            {
+              "permission": [
+                {
+                  "urls": "/login,/logout,/oauth/getToken",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/static/**,/templates/**",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/docs,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**",
+                  "permission": "anon"
+                },
+                {
+                  "url": "/sysUser/getPageList",
+                  "permission": "anon"
+                }
+              ]
+            }
+            ]]>
+        </el>
+    </actionElCollectoin>
+
+    <!--应用模块配置-->
+    <applicationModuleCollection>
+        <!--zentao-->
+        <applicationModule code="pmi" name="pmi" pathName="classpath:/application.properties">
+            <settingCollection>
+                <setting key="part" value="D:\\"/>
+                <setting key="isDebug" value="false" />
+            </settingCollection>
+            <relationConnectionCollection>
+                <relationConnection forKey="pmi-Database" aliasName="pmiDatabase"/>
+                <relationConnection forKey="fmp-Database" aliasName="fmpDatabase"/>
+            </relationConnectionCollection>
+            <relationActionElCollection>
+                <relation>spring</relation>
+                <relation>hw.shiro</relation>
+                <relation>hw</relation>
+            </relationActionElCollection>
+            <actionElCollectoin>
+                <el name="spring.datasource.dynamic.primary">pmiDatabase</el>
+                <el name="server.port">8081</el>
+                <el name="swagger" valueType="json">
+                    <![CDATA[
+                    {
+                      "base": {
+                        "package": "hw.topevery.basis.wapi"
+                      },
+                      "description": "",
+                      "title": "PmiAPI",
+                      "url": "",
+                      "version": "1.0"
+                    }
+                    ]]>
+                </el>
+                <el name="logging.level.hw.topevery">debug</el>
+                <el name="hw.fmpCode">8888</el>
+                <el name="spring.data.mongodb" valueType="json"> <![CDATA[
+                    {
+                       "username": "ty_fmp",
+                       "password": "tyfmp123!@#",
+                       "host": "192.168.1.242",
+                       "port": "27017",
+                       "database": "ty_fmp_data"
+                    }
+                    ]]></el>
+                <el name="hw.shiro" valueType="json">
+                    <![CDATA[
+                    {
+                      "filter-chain-definitions": "/=anon\n/static/**=anon\n/templates/**=anon\n/druid/**=anon\n/hello/world=anon\n/sysLog/**=anon\n/verificationCode/**=anon\n/fooBar/**=anon\n/sendToTycard/updateMsgStatus=anon",
+                    }
+                    ]]>
+                </el>
+            </actionElCollectoin>
+        </applicationModule>
+
+    </applicationModuleCollection>
+</runtimeSection>
+

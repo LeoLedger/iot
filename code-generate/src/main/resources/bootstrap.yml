@@ -1,0 +1,16 @@
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  application:
+    name: example
+  cloud:
+    config: # url规则是 【uri/name/profile/label】，token以header["x-config-token"]传输
+      uri: http://192.168.0.101:8100/cloud/controller/cfg #配置中心地址
+      token: YourVaultToken  # 对应header里面的x-config-token
+      profile: dev  # 用于指定文件 hw.topevery.cloud.%s.xml的%s变量值
+      name: autoCode  # 对应配置文件中的applicationModule.code
+      label: local  # 暂时没用上
+

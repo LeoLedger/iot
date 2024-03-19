@@ -1,0 +1,27 @@
+{
+  "editor.formatOnType": true,
+  // // 每次保存的时候自动格式化
+  "editor.codeActionsOnSave": {
+      "source.fixAll": true
+  },
+  "eslint.run": "onSave",
+  "eslint.options": {
+      //指定vscode的eslint所处理的文件的后缀
+      "extensions": [
+          ".js",
+          ".vue",
+          ".ts",
+          ".tsx"
+      ]
+  },
+  "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
+  "[vue]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
+}

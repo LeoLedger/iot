@@ -1,0 +1,25 @@
+package hw.topevery.basis.device.dto;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
+import lombok.Data;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.math.BigDecimal;
+import org.locationtech.jts.geom.Geometry;
+
+/**
+ * {@:tableComment} 详情dto
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Data
+@ApiModel(description = "{@:tableComment} 详情dto")
+public class {@:className}DetailDto extends {@:className}CreateOrUpdateDto implements Serializable {
+
+}

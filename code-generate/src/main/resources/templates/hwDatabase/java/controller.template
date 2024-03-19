@@ -1,0 +1,72 @@
+package {@:packageName}.controller;
+
+import hw.topevery.basis.device.I{@:className}Dao;
+import hw.topevery.basis.device.po.{@:className};
+import hw.topevery.basis.device.fetch.{@:className}Fetch;
+import hw.topevery.basis.device.dto.{@:className}DetailDto;
+import hw.topevery.basis.device.logic.{@:className}Logic;
+import hw.topevery.basis.framework.aop.EnableTransaction;
+import hw.topevery.basis.wapi.pmi.controller.BaseController;
+import hw.topevery.framework.db.entity.DataPager;
+import hw.topevery.framework.util.ExcelUtil;
+import hw.topevery.framework.web.JsonResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * {@:tableComment}
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Slf4j
+@Api(tags = "{@:tableComment}")
+@RestController
+@RequestMapping("/{@:hump.className}")
+public class {@:className}Controller extends BaseController {
+
+    @Autowired
+    {@:className}Logic logic;
+
+    @ApiOperation("列表")
+    @GetMapping()
+    public JsonResult<DataPager<{@:className}DetailDto>> getList({@:className}Fetch fetch) {
+        return JsonResult.ok(logic.getList(fetch));
+    }
+
+    @EnableTransaction()
+    @ApiOperation("创建or更新")
+    @PostMapping()
+    public JsonResult<Boolean> createOrUpdate(@RequestBody {@:className}CreateOrUpdateDto model) throws Exception {
+        logic.createOrUpdate(model);
+        return JsonResult.ok(true);
+    }
+
+    @ApiOperation("获取详情")
+    @GetMapping("{id}")
+    public JsonResult<{@:className}DetailDto> get(@PathVariable UUID id) throws IllegalAccessException, InstantiationException {
+        return JsonResult.ok(logic.getDetailByGuid(id));
+    }
+
+    @EnableTransaction()
+    @ApiOperation("根据GUID删除")
+    @DeleteMapping("{id}")
+    public JsonResult<Boolean> delete(@PathVariable String id) {
+        logic.deleteByGuid(id);
+        return JsonResult.ok(true);
+    }
+
+    @ApiOperation("导出")
+    @GetMapping("export")
+    public void export({@:className}Fetch fetch, HttpServletResponse response) {
+        logic.export(fetch, response);
+    }
+}

@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<runtimeSection pathName="classpath:/glb.json">
+
+    <!--系统配置-->
+    <actionElCollectoin>
+        <el name="server" valueType="json">
+            <![CDATA[
+            {
+              "servlet": {
+                "encoding": {
+                  "charset": "UTF-8",
+                  "enabled": true,
+                  "force": true
+                }
+              }
+            }
+            ]]>
+        </el>
+        <el name="spring" valueType="json">
+            <![CDATA[
+            {
+              "http": {
+                "multipart": {
+                  "maxFileSize": "100Mb",
+                  "maxRequestSize": "1000Mb"
+                }
+              },
+              "datasource": {
+                  "dynamic": {
+                    "druid": {
+                      "stat": {
+                        "log-slow-sql": true,
+                        "merge-sql": true,
+                        "slow-sql-millis": 3000
+                      },
+                      "wall": {
+                        "delete-allow": true,
+                        "drop-table-allow": true,
+                        "multi-statement-allow": true
+                      },
+                      "filters": "stat,wall,slf4j",
+                      "initial-size": 10,
+                      "max-active": 100,
+                      "max-wait": 60000,
+                      "min-evictable-idle-time-millis": 300000,
+                      "min-idle": 10,
+                      "pool-prepared-statements": true,
+                      "max-pool-prepared-statement-per-connection-size": 20,
+                      "test-on-borrow": false,
+                      "test-on-return": false,
+                      "test-while-idle": true,
+                      "time-between-eviction-runs-millis": 60000,
+                      "validation-query": "SELECT 1",
+                      "validation-query-timeout": 60000
+                    }
+                  }
+                }
+            }
+            ]]>
+        </el>
+        <el name="mybatis-plus" valueType="json">
+            <![CDATA[
+            {
+              "check-config-location": true,
+              "mapper-locations": "classpath*:mybatis/mapper/hwDatabase/**/*Mapper.xml, classpath*:mybatis/mapper/pmiDatabase/*Mapper.xml",
+              "configuration": {
+                "map-underscore-to-camel-case": true,
+                "default-enum-type-handler": "hw.topevery.plus.ibatis.GeometryHandler",
+                "call-setters-on-nulls": "on"
+              },
+              "global-config": {
+                "db-config": {
+                  "id-type": "id_worker",
+                  "logic-delete-value": 1,
+                  "logic-not-delete-value": 0
+                }
+              }
+            }
+            ]]>
+        </el>
+        <el name="hw" valueType="json">
+            <![CDATA[
+            {
+              "fmp": {
+                "omiUrl": "http://hw-topevery-dev-fmp:8001/fmp/rs",
+                "fmpCode": "4403",
+                "fmpThumbnailCode": "4403_01",
+              },
+              "enable-ansi": true,
+              "enable-verify-code": false,
+              "filter": {
+                "request-path": {
+                  "enabled": true,
+                  "include-paths": "/**",
+                  "exclude-paths": "/applications/**,/actuator/**,/instances/**,/logfile,/sba-settings.js,/assets/img/favicon.png,/swagger-ui.html,/swagger-resources/**,/webjars/springfox-swagger-ui/**,/v2/api-docs,/druid/**,/favicon.ico"
+                }
+              },
+              "interceptor": {
+                "permission": {
+                  "enabled": false,
+                  "include-paths": "/**",
+                  "exclude-paths": "/swagger-resources/**,/api-docs/**,/v2/api-docs/**,/adminLogin,/sysLogin,/login.html,/verificationCode,/doc/**,/error/**,/docs,/resource/**"
+                },
+                "resource": {
+                  "enabled": true,
+                  "include-paths": "${spring-boot-plus.resource-access-patterns}"
+                }
+              },
+              "cors": {
+                "enable": true,
+                "path": "/**",
+                "allowed-origins": "*",
+                "allowed-headers": "x-requested-with,content-type,token",
+                "allow-credentials": true,
+                "allowed-methods": "OPTION,GET,POST",
+                "exposed-headers": "token",
+                "max-age": 1800
+              },
+              "jwt": {
+                "token-name": "token", //token请求头名称
+                "secret": 666666, //jwt密钥
+                "issuer": "topevery", //发行人
+                "audience": "web", //观众
+                "expire-second": 3600, //默认过期时间1小时，单位：秒
+                "refresh-token": true, //是否刷新token
+                "refresh-token-countdown": 600, //刷新token的时间间隔，默认10分钟，单位：秒
+                "redis-check": true, //redis校验jwt token是否存在,可选
+                "single-login": false, //true: 同一个账号只能是最后一次登陆token有效，false：同一个账号可多次登陆
+                "salt-check": true //盐值校验，如果不加自定义盐值，则使用secret校验
+              },
+              "shiro": {
+                "enable": true,
+                "filter-chain-definitions": "/=anon\n/static/**=anon\n/templates/**=anon\n/druid/**=anon\n/hello/world=anon\n/sysLog/**=anon\n/verificationCode/**=anon\n/resource/**=anon\n/fooBar/**=anon"
+              }
+            }
+		    ]]>
+        </el>
+    </actionElCollectoin>
+
+    <!--数据库信息配置-->
+    <connectionCollection>
+        <!--<editor-fold desc="fmp">-->
+        <connection key="fmpDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_fmp?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#" />
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="北碚">-->
+        <!--业务-->
+        <connection key="cq-beibei-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="cq-beibei-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="cq-beibei-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="cq-beibei-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--渣土-->
+        <connection key="cq-beibei-ztDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb_zt?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--垃圾分类-->
+        <connection key="cq-beibei-ljflDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ljfl?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <!--巡查-->
+        <connection key="cq-beibei-inspectDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--接口-->
+        <connection key="cq-beibei-apiDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb_bigdata?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="宝安">-->
+        <!--业务-->
+        <connection key="sz-baoan-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="sz-baoan-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="sz-baoan-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="sz-baoan-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--垃圾分类-->
+        <connection key="sz-baoan-ljfl" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba_ljfl?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--测评-->
+        <connection key="sz-baoan-indexDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/sz_hw_index_ba?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <!--垃圾分类-->
+        <connection key="sz-ljfl-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ba_ljfl?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--<connection key="sz-ljfl-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://47.105.196.165:8010/garbage?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="dev" password="Aa123456"/>-->
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="青羊">-->
+        <!--业务-->
+        <connection key="cd-qingyang-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/cd_station_qy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="cd-qingyang-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/cd_station_qy_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="cd-qingyang-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/cd_station_qy_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="cd-qingyang-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/cd_station_qy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="宿迁">-->
+        <!--业务-->
+        <connection key="js-suqian-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_jssq?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="js-suqian-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_jssq_qy_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="js-suqian-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_jssq?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="龙岗">-->
+        <!--业务-->
+        <connection key="sz-longgang-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_lg?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="sz-longgang-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_lg_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="sz-longgang-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_lg?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="sz-longgang-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_lg_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="四川宜宾">-->
+        <!--业务-->
+        <connection key="sc-yb-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_scyb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="sc-yb-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_scyb_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="sc-yb-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_scyb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="sc-yb-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_scyb_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="车辆智能监控">-->
+        <!--业务-->
+        <connection key="scar_idmBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/car_idm?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="car_idm-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/car_idm_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="car_idm-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/car_idm?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <connection key="car_idm_localGpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_gps_local_car_idm?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="物联网对接">-->
+        <!--业务-->
+        <connection key="wlw-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.239:3306/ty_hw_cqbb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="wlw-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.239:3306/ty_hw_cqbb_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="wlw-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.239:3306/ty_hw_cqbb_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="wlw-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.239:3306/ty_hw_cqbb?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="山西襄垣县环卫车辆监管系统">-->
+        <!--业务-->
+        <connection key="sx-xiangyuan-hwDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/sx_hw_xh?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="sx-xiangyuan-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/sx_hw_xh_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="罗湖爱卫">-->
+        <!--业务-->
+        <connection key="sz-lhaw-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_lhaw?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+        <!--<editor-fold desc="禅道">-->
+        <!--业务-->
+        <connection key="zentao-Database" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.231:43307/zentao?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="root" password="tyadmin123!@#"/>
+        <!--</editor-fold>-->
+
+      <!--<editor-fold desc="垃圾分类">-->
+      <!--业务-->
+
+
+        <!--<editor-fold desc="（福田区莲花街道）环卫提升培训系统">-->
+        <!--业务-->
+        <connection key="index-train-Database" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_index_train?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+
+        <!--<editor-fold desc="武冈">-->
+        <!--业务-->
+        <connection key="wg-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/hn_hw_wg?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+
+        <!--业务-->
+        <connection key="wg-yn-qj-zt-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_zt?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="wg-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/hn_hw_wg_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="wg-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/hn_hw_wg?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--渣土-->
+        <connection key="wg-ztDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/hn_hw_wg_zt?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--渣土GPS-->
+        <connection key="wg-ztGpsDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/hn_hw_wg_zt_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+
+
+
+
+        <!--<editor-fold desc="云南曲靖散体货运">-->
+        <!--业务-->
+        <connection key="yn-qj-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_hw?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <!--GPS-->
+        <connection key="yn-qj-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_hw_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="yn-qj-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_hw?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <!--渣土-->
+        <connection key="yn-qj-zt-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_zt?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--渣土GPS-->
+        <connection key="yn-qj-ztGpsDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/yn_qj_zt_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--</editor-fold>-->
+        <!--业务-->
+        <connection key="yanshi-hwBusDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--GPS-->
+        <connection key="yanshi-gpsDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy_gps?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--工作流-->
+        <connection key="yanshi-actDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy_act?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--新工作流-->
+        <connection key="yanshi-wfDatabase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--渣土-->
+        <connection key="yanshi-ztDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_cqbb_zt?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+        <!--巡查-->
+        <connection key="yanshi-inspectDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_xc_swy?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+        <!--垃圾分类-->
+        <connection key="yanshi-ljflhwDataBase" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://hw-topevery-dev-db:3306/ty_hw_ljfl?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"
+                    username="hw" password="Hwdb123!@#"/>
+
+    </connectionCollection>
+
+</runtimeSection>
+

@@ -1,0 +1,50 @@
+package {@:packageName}.dal.logic;
+
+import hw.topevery.basis.device.I{@:className}Dao;
+import hw.topevery.basis.device.po.{@:className};
+import hw.topevery.basis.device.fetch.{@:className}Fetch;
+import hw.topevery.basis.device.dto.{@:className}DetailDto;
+import hw.topevery.basis.device.dto.{@:className}CreateOrUpdateDto;
+
+import hw.topevery.basis.framework.base.BaseCrudDao;
+import hw.topevery.basis.framework.base.BaseCrudLogic2;
+import hw.topevery.basis.framework.util.ExcelExportUtils;
+import hw.topevery.framework.db.entity.DataPager;
+import hw.topevery.framework.db.base.BaseEntityDao;
+import hw.topevery.framework.db.base.BaseEntityDao;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
+import java.util.UUID;
+
+/**
+ * {@:tableComment} logic
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Service
+public class {@:className}Logic extends BaseCrudLogic2<{@:className}, {@:className}DetailDto, {@:entityKeyName}, {@:className}Fetch, {@:className}CreateOrUpdateDto> {
+
+    @Autowired
+    I{@:className}Dao dao;
+
+    @Override
+    protected BaseCrudDao<{@:className}, {@:className}DetailDto, {@:entityKeyName}, {@:className}Fetch> getCrudDao() {
+        return dao;
+    }
+
+    public void export({@:className}Fetch fetch, HttpServletResponse response) {
+        String fileName = "{@:tableComment}.xls";
+        String title = "{@:tableComment}列表";
+
+        fetch.pageIndex = -1; // 查询全部。
+        DataPager<{@:className}DetailDto> dataPager = dao.getDataPager(fetch);
+
+        ExcelExportUtils.exportExcel(dataPager.records, title, StringUtils.EMPTY, {@:className}DetailDto.class, fileName,
+                response);
+    }
+}

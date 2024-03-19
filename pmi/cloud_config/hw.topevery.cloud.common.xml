@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<runtimeSection pathName="classpath:/glb.json">
+
+    <!--系统配置-->
+    <actionElCollectoin>
+        <el name="spring" valueType="json">
+            <![CDATA[
+            {
+              "http": {
+                "encoding": {
+                  "charset": "UTF-8",
+                  "enabled": true,
+                  "force": true
+                }
+              },
+              "servlet": {
+                "multipart": {
+                  "enabled": true,
+                  "file-size-threshold": 0,
+                  "max-file-size": "100MB",
+                  "max-request-size": "100MB"
+                }
+              },
+              "datasource": {
+                  "dynamic": {
+                    "druid": {
+                      "stat": {
+                        "log-slow-sql": true,
+                        "merge-sql": true,
+                        "slow-sql-millis": 3000
+                      },
+                      "wall": {
+                        "delete-allow": true,
+                        "drop-table-allow": true,
+                        "multi-statement-allow": true
+                      },
+                      "filters": "stat,wall,slf4j",
+                      "initial-size": 10,
+                      "max-active": 100,
+                      "max-wait": 60000,
+                      "min-evictable-idle-time-millis": 300000,
+                      "min-idle": 10,
+                      "pool-prepared-statements": true,
+                      "max-pool-prepared-statement-per-connection-size": 20,
+                      "test-on-borrow": false,
+                      "test-on-return": false,
+                      "test-while-idle": true,
+                      "time-between-eviction-runs-millis": 60000,
+                      "validation-query": "SELECT 1",
+                      "validation-query-timeout": 60000
+                    }
+                  }
+                }
+            }
+            ]]>
+        </el>
+        <el name="hw" valueType="json">
+            <![CDATA[
+            {
+              "enable-ansi": true,
+              "enable-verify-code": false,
+              "filter": {
+                "request-path": {
+                  "enabled": true,
+                  "include-paths": "/**",
+                  "exclude-paths": "/applications/**,/actuator/**,/instances/**,/logfile,/sba-settings.js,/assets/img/favicon.png,/swagger-ui.html,/swagger-resources/**,/webjars/springfox-swagger-ui/**,/v2/api-docs,/druid/**,/favicon.ico"
+                }
+              },
+              "interceptor": {
+                "permission": {
+                  "enabled": false,
+                  "include-paths": "/**",
+                  "exclude-paths": "/swagger-resources/**,/api-docs/**,/v2/api-docs/**,/adminLogin,/sysLogin,/login.html,/verificationCode,/doc/**,/error/**,/docs,/resource/**"
+                },
+                "resource": {
+                  "enabled": true,
+                  "include-paths": "${spring-boot-plus.resource-access-patterns}"
+                }
+              },
+              "cors": {
+                "enable": true,
+                "path": "/**",
+                "allowed-origins": "*",
+                "allowed-headers": "x-requested-with,content-type,token",
+                "allow-credentials": true,
+                "allowed-methods": "OPTION,GET,POST,PUT,DELETE",
+                "exposed-headers": "token",
+                "max-age": 1800
+              },
+              "jwt": {
+                "token-name": "token", //token请求头名称
+                "secret": 123456, //jwt密钥
+                "issuer": "topevery", //发行人
+                "audience": "web", //观众
+                "expire-second": 3600, //默认过期时间1小时，单位：秒
+                "refresh-token": true, //是否刷新token
+                "refresh-token-countdown": 600, //刷新token的时间间隔，默认10分钟，单位：秒
+                "redis-check": true, //redis校验jwt token是否存在,可选
+                "single-login": false, //true: 同一个账号只能是最后一次登陆token有效，false：同一个账号可多次登陆
+                "salt-check": true //盐值校验，如果不加自定义盐值，则使用secret校验
+              },
+              "shiro": {
+                "enable": true,
+                "filter-chain-definitions": "/=anon\n/static/**=anon\n/templates/**=anon\n/druid/**=anon\n/hello/world=anon\n/sysLog/**=anon\n/verificationCode/**=anon\n/resource/**=anon\n/fooBar/**=anon"
+              }
+            }
+		    ]]>
+        </el>
+    </actionElCollectoin>
+
+    <!--数据库信息配置-->
+    <connectionCollection>
+        <!--<editor-fold desc="禅道">-->
+        <!--业务-->
+        <connection key="pmi-Database" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.227:3306/ty_hw_device?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;rewriteBatchedStatements=true&amp;serverTimezone=GMT%2b8"
+                    username="root" password="123456"/>
+
+        <connection key="fmp-Database" providerName="com.mysql.cj.jdbc.Driver"
+                    url="jdbc:mysql://192.168.0.227:3306/ty_fmp?useUnicode=true&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;rewriteBatchedStatements=true&amp;serverTimezone=GMT%2b8"
+                    username="root" password="123456"/>
+
+        <!--</editor-fold>-->
+    </connectionCollection>
+
+</runtimeSection>
+

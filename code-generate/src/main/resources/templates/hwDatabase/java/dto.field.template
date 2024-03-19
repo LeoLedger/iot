@@ -1,0 +1,4 @@
+    /** {@:columnComment} */
+    @Excel(name = "{@:columnComment}")
+    @ApiModelProperty(value = "{@:columnComment}")
+    private {@:fieldClassType} {@:fieldName};

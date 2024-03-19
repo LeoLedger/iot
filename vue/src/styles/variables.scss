@@ -1,0 +1,51 @@
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+//sidebar
+$menuText:#bfcbd9;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+
+$menuBg:#304156;
+$menuHover:#263445;
+
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
+
+$sideBarWidth: 180px;
+// 设置相关 业务的 常规样式  后期 使用 对应的变量 __ by_lance
+/*----------颜色---------*/
+$color-c1: #76b6fe;// hover
+
+$color-c2: #282828;// 标题
+$color-c3: #5e5e5e;// 正文
+$color-c4: #a3a3a3;// 说明文案
+$color-c5: #cfcfcf;// 输入框
+
+
+$bgc-c1: #ffb92e;	       // 背景
+
+
+$border-c1: #76b6fe;	   // 按钮border
+$border-c2: #eeeeee;
+
+//   End ...
+
+// the :export directive is the magic sauce for webpack
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

@@ -1,0 +1,18 @@
+package {@:packageName}.dal.dao;
+
+import hw.topevery.basis.device.po.{@:className};
+import hw.topevery.basis.device.fetch.{@:className}Fetch;
+import hw.topevery.basis.device.dto.{@:className}DetailDto;
+import hw.topevery.basis.framework.base.BaseCrudDao;
+
+import java.util.UUID;
+
+/**
+ * {@:tableComment} dao
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+public interface I{@:className}Dao extends BaseCrudDao<{@:className}, {@:className}DetailDto, {@:entityKeyName}, {@:className}Fetch> {
+
+}

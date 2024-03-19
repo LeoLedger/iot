@@ -1,0 +1,53 @@
+trigger: none
+
+pool:
+  name: 'zhk'
+
+steps:
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pmi/pom.xml'
+    goals: 'clean'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pmi/pom.xml'
+    options: '-pl basis-framework-v2,basis-entity-v2,basis-dal-v2,basis-config-v2,basis-schedule-v2 -s pmi/settings-topevery.xml -U'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- task: CopyFiles@2
+  displayName: 复制文件
+  inputs:
+    SourceFolder: 'pmi/basis-schedule-v2/target'
+    Contents: '*.jar'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+- task: CopyFiles@2
+  displayName: 复制文件
+  inputs:
+    SourceFolder: 'pmi/basis-schedule-v2/'
+    Contents: 'Dockerfile'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'api'
+    publishLocation: 'Container'
+
+ 

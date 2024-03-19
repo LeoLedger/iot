@@ -1,0 +1,27 @@
+package hw.topevery.basis.device.po;
+
+import hw.topevery.basis.framework.base.BaseEntity;
+import hw.topevery.basis.framework.base.IHaveGuid;
+import hw.topevery.framework.annotation.DbTable;
+import hw.topevery.framework.annotation.DbTableField;
+import hw.topevery.framework.enums.DbTypeEnum;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.math.BigDecimal;
+
+import lombok.Data;
+import org.locationtech.jts.geom.Geometry;
+
+/**
+ * {@:tableComment}
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Data
+@DbTable(tableName = "{@:tableName}")
+public class {@:className} extends BaseEntity {@:implements} {
+    {@:classContent}
+}

@@ -1,0 +1,19 @@
+package {@:packageName}.entity.po.query;
+
+import hw.topevery.basis.framework.QueryParameter;
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * {@:tableComment} 查询参数
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(description = "{@:tableComment} 查询参数")
+public class {@:className}Fetch extends QueryParameter {
+
+}

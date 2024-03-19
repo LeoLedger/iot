@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<runtimeSection pathName="classpath:/glb.json">
+    <application id="50001" name="精细化V1.0"/>
+
+    <!--系统配置-->
+    <actionElCollectoin>
+        <el name="hw.shiro" valueType="json">
+            <![CDATA[
+            {
+              "permission": [
+                {
+                  "urls": "/login,/logout",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/static/**,/templates/**",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/docs,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs",
+                  "permission": "anon"
+                },
+                {
+                  "urls": "/,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**",
+                  "permission": "anon"
+                },
+                {
+                  "url": "/sysUser/getPageList",
+                  "permission": "anon"
+                }
+              ]
+            }
+            ]]>
+        </el>
+        <el name="hw.sso" valueType="json">
+            <![CDATA[
+            {
+              "omiUrl": "http://localhost:8004/sso/oauth",
+              "loginUrl": "http://221.10.126.230:9002/cciauth/oauth/token",
+              "logoutUrl": "http://221.10.126.230:9002/cciauth/logout/",
+              "userInfoUrl": "http://221.10.126.230:9002/cciauth/user/getUserInfo",
+              "clientId": "d803b2e25a6c45d3b998feb20fecab78",
+              "clientSecret": "1db1b25ea6be405096d7eb8aca54fef5"
+            }
+            ]]>
+        </el>
+
+         <el name="hw.pmi" valueType="json">
+            <![CDATA[
+            {
+              "omiUrl": "http://hw-topevery-dev-sso:8084/rs"
+            }
+            ]]>
+        </el>
+        <el name="spring.activiti" valueType="json">
+            <![CDATA[
+            {
+              "db-history-used": true,
+              "check-process-definitions": true,
+              "history-level": "full",
+              "database-schema-update": true,
+              "async-executor-activate": true
+            }
+            ]]>
+        </el>
+        <el name="hw.enable-login-decrypt">true</el>
+    </actionElCollectoin>
+
+    <!--应用模块配置-->
+    <applicationModuleCollection>
+      <!--代码生成器-->
+        <applicationModule code="autoCode" pathName="classpath:/application.properties">
+           <settingCollection>
+               <setting key="part" value="D:\\auto_code\\"/>
+               <setting key="package-baoanDatabase" value="hw.topevery.baoan"/>
+               <setting key="package-beibeiDatabase" value="hw.topevery.business"/>
+               <setting key="package-sx-xiangyuan" value="hw.topevery.xiangyuan"/>
+               <setting key="cq-beibei-ztDataBase" value="hw.topevery.muck"/>
+               <setting key="cq-beibei-ztDataBase" value="hw.topevery.muck"/>
+               <setting key="package-xcDatabase" value="hw.topevery.inspect"/>
+            </settingCollection>
+            <relationConnectionCollection>
+                <relationConnection forKey="pmi-Database" aliasName="pmiDatabase"/>
+                <relationConnection forKey="fmp-Database" aliasName="fmpDatabase"/>
+            </relationConnectionCollection>
+            <relationActionElCollection>
+            </relationActionElCollection>
+            <actionElCollectoin>
+                <el name="spring.datasource.dynamic.primary">fmpDatabase</el>
+                <el name="server.port">8091</el>
+                <el name="spring.thymeleaf" valueType="json">
+                    <![CDATA[
+                    {
+                      "prefix": "classpath:/page/",
+                      "suffix": ".html",
+                      "mode": "HTML5",
+                      "encoding": "utf-8",
+                      "cache": false
+                    }
+                    ]]>
+                </el>
+            </actionElCollectoin>
+        </applicationModule>
+
+    </applicationModuleCollection>
+</runtimeSection>
+

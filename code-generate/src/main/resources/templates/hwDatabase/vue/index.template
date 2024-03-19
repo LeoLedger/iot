@@ -1,0 +1,204 @@
+<template>
+  <div>
+    <!-- 页面类名 page -->
+    <cube-Table-List
+      ref="CubeTableRender"
+      class="page"
+      :config="config"
+    />
+
+      <!--编辑-->
+        <edit
+          v-if="editVisible"
+          :edit-visible="editVisible"
+          :road-id="roadId"
+          @closeEditDialog="closeEditDialog"
+        />
+
+        <!--详情-->
+        <info
+          v-if="infoVisible"
+          :info-visible="infoVisible"
+          :road-id="roadId"
+          @closeInfoDialog="closeInfoDialog"
+        />
+  </div>
+</template>
+
+import edit from './edit'
+import info from './info'
+
+export default {
+  name: 'RoadIndex',
+  components: {
+    edit,
+    info
+  },
+
+  data() {
+    const baseURL = this.$prefixUrl
+    const _this = this
+    return {
+      editVisible: false,
+      infoVisible: false,
+      importVisible: false,
+      roadId: null,
+      roadEnum,
+      config: {
+        method: 'POST',
+        url: baseURL + '/road/getPageList',
+        search: {
+          data: [
+            [
+              {
+                type: 'input',
+                key: 'roadName',
+                class: 'w180',
+                placeholder: '请输入道路名称'
+              },
+              {
+                type: 'option',
+                key: 'cleanLevel',
+                class: 'w150',
+                placeholder: '请选择保洁等级',
+                options: []
+              },
+              {
+                type: 'option',
+                class: 'w150',
+                key: 'classType',
+                placeholder: '请选择道路类型',
+                options: []
+              },
+              {
+                type: 'cubeCascader',
+                value: null,
+                class: 'w140',
+                key: 'superviseId',
+                extraParam: { // 其他请求拓展参数
+                  treeId: superviseTreeId
+                },
+                config: {
+                  placeholder: '监管主体',
+                  keyCode: 'value',
+                  keyName: 'label',
+                  children: 'children',
+                  method: 'GET',
+                  url: baseURL + `/customDept/tree`
+                }
+              },
+              {
+                type: 'cubeCascader',
+                value: null,
+                class: 'w140',
+                key: 'responsibilityId',
+                extraParam: { // 其他请求拓展参数
+                  treeId: responsibilityTreeId
+                },
+                config: {
+                  placeholder: '责任主体',
+                  keyCode: 'value',
+                  keyName: 'label',
+                  children: 'children',
+                  method: 'GET',
+                  url: baseURL + `/customDept/tree`
+                }
+              },
+              {
+                type: 'cubeSelectTree',
+                value: null,
+                class: 'w140',
+                key: 'sectionId',
+                extraParam: { // 其他请求拓展参数
+                  rootType: 1,
+                  showGeomCol: false
+                },
+                config: {
+                  placeholder: '选择标段',
+                  keyCode: 'value',
+                  keyName: 'label',
+                  children: 'children',
+                  method: 'POST',
+                  url: baseURL + `/getSectionTree`
+                }
+              },
+
+              { type: 'search', name: '查询' },
+              { type: 'reset', name: '重置' }
+            ],
+            [
+              { type: 'add', name: '新增', action: () => this.add() },
+              { type: 'button', icon: 'el-icon-folder-opened', name: '导入', action: () => this.import() },
+              { type: 'button', icon: 'el-icon-folder-opened', name: '导出', action: () => this.export() },
+              { type: 'button', btType: 'danger', icon: 'el-icon-delete', name: '删除', action: () => this.delete() }
+            ]
+          ]
+        },
+        table: {
+          prefixHeight: 20,
+          tableHeight: 250,
+          calcTableHeight: true, // 是否开启表格自动高度计算
+          columns: [
+            { label: '选择', type: 'selection' },
+            { label: '序号', type: 'index' },
+            {
+              label: '道路名称',
+              key: 'roadName',
+              render: (h, parmas) => {
+                const { row } = parmas
+                return (
+                  <div class='flex-table-cell'>
+                    <div class='btn-text' onClick={() => this.info(row)}>{row.roadName}</div>
+                  </div>
+                )
+              }
+            },
+            { label: '起点', key: 'startPoint' },
+            { label: '终点', key: 'endPoint' },
+            { label: '监管主体', key: 'superviseName' },
+            { label: '责任主体', key: 'responsibilityName' },
+            { label: '清扫作业标段', key: 'sectionName' },
+            {
+              label: '保洁等级',
+              key: 'cleanLevel',
+              render: (h, parmas) => {
+                const { row } = parmas
+                const res = _this.roadEnum.cleanLevel.find((val) => {
+                  return val.value === row.cleanLevel
+                })
+                return <span>{res ? res.label : ''}</span>
+              }
+            },
+            {
+              label: '道路类型',
+              key: 'classType',
+              render: (h, parmas) => {
+                const { row } = parmas
+                const res = _this.roadEnum.mainStem.find((val) => {
+                  return val.value === row.classType
+                })
+                return <span>{res ? res.label : ''}</span>
+              }
+            },
+            { label: '道路长度(米)', key: 'roadLength' },
+            { label: '主车道数', key: 'carriageway' },
+            { label: '主车道宽度(米)', key: 'zcdWidth' },
+            {
+              label: '操作',
+              key: '',
+              width: 80,
+              render: (h, parmas) => {
+                const { row } = parmas
+                return (
+                  <div class='flex-table-cell'>
+                    <div class='btn-text' onClick={() => this.edit(row)}>编辑</div>
+                  </div>
+                )
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

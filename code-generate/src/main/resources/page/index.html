@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>Topevery-代码生成</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        .clearfix:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .fr {
+            float: right;
+        }
+
+        .container {
+            width: 1080px;
+            padding: 40px;
+            margin: 0 auto;
+        }
+
+        .container > div {
+            width: 45%;
+            height: 600px;
+            padding: 0 10px;
+            border: 1px solid #000;
+            overflow: hidden auto;
+        }
+
+        .db-item, .table-item {
+            position: relative;
+            padding: 5px 5px 5px 20px;
+            cursor: pointer;
+            user-select: none;
+            word-break: break-all;
+            border-bottom: 1px solid #000;
+        }
+
+        .db-item:last-child, .table-item:last-child {
+            border-bottom: none;
+        }
+
+        .active {
+            color: #1989fa;
+        }
+
+        .active:after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            width: 10px;
+            height: 5px;
+            margin-top: -4px;
+            border-left: 1px solid #1989fa;
+            border-bottom: 1px solid #1989fa;
+            transform: rotate(-45deg);
+        }
+
+        .btn-wrap {
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 6px 20px;
+            color: #fff;
+            background-color: #1989fa;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .popup-wrap {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            color: #fff;
+            transform: translate(-50%, -50%);
+        }
+
+        .popup-wrap span {
+            padding: 10px;
+            background-color: rgba(0, 0, 0, .5);
+            border-radius: 4px;
+        }
+        .form{
+            text-align: center;
+        }
+        .form-input{
+            background-color: #FFF;
+            background-image: none;
+            border-radius: 4px;
+            border: 1px solid #DCDFE6;
+            box-sizing: border-box;
+            color: #606266;
+            display: inline-block;
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+            outline: 0;
+            padding: 0 15px;
+            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+            width: 250px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="container clearfix">
+    <div class="db fl"></div>
+    <div class="table fr">请选择数据库</div>
+</div>
+<div class="form">
+    <input id="author" value="code-generate" class="form-input" type="text" placeholder="请输入作者名称" />
+</div>
+<div class="btn-wrap">
+    <span class="btn">生成</span>
+</div>
+<div class="popup-wrap">
+    <span>
+      已将代码生成到 【返回值】
+    </span>
+</div>
+<script src="jquery.1.11.1.min.js"></script>
+<script>
+    $(function () {
+        var dbKey = ''
+        // 获取列表
+        getList(function (data) {
+            var dbList = data;
+            var dbStr = ''
+
+            for (var i = 0; i < dbList.length; i++) {
+                dbStr += '<div class="db-item" key="' + dbList[i].key + '" >\
+          ' + dbList[i].key + '\
+          </div>\
+          '
+            }
+
+            $('.db').html(dbStr)
+        });
+
+        var tableNameList = [];
+
+        // 数据库列表点击
+        $(document).on('click', '.db-item', function () {
+            var key = $(this).attr('key')
+            $(this).addClass('active').siblings().removeClass('active')
+            // 设置选中key值
+            dbKey = key
+            // 获取数据表
+            getTables(key, function (data) {
+                var tableList = data
+                var tableStr = ''
+
+                for (var i = 0; i < tableList.length; i++) {
+                    tableStr += '<div class="table-item" name="' + tableList[i].name + '" >\
+            ' + (tableList[i].comment || '<span style="color: #ff0000">当前表没有注释</span>') + '<br/>\
+            ' + tableList[i].name + '\
+            </div>\
+            '
+                }
+                $('.table').html(tableStr)
+                // $(this).after(tableList.length+'张表')
+            })
+            tableNameList = [];
+        });
+
+        $(document).on('click', '.table-item', function (e) {
+            var name = $(this).attr('name')
+            var index = $(this).index()
+            console.log(name, index)
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active')
+                var tableNameListTemp = [];
+                for (var i = tableNameList.length - 1; 0 <= i; i--) {
+                    if (tableNameList[i] != name) {
+                        tableNameListTemp.push(name);
+                    }
+                }
+                tableNameList = tableNameListTemp;
+            } else {
+                $(this).addClass('active')
+                tableNameList.push(name);
+            }
+        });
+
+        var isSubmit = false
+        $('.btn').on('click', function () {
+            var that = $(this)
+            var tables;
+            if (tableNameList && 0 < tableNameList.length) {
+                tables = tableNameList.join(',');
+            } else {
+                tables = "";
+            }
+            that.html('生成中...')
+            if (!isSubmit) {
+                isSubmit = true
+                var author = $('#author').val()
+                submit(author, dbKey, tables, function (data) {
+                    isSubmit = false
+                    // $('.popup-wrap').show()
+                    // $('.db-item').removeClass('active')
+                    // $('.table').html('请选择数据库')
+                    // that.html('生成')
+                    // setTimeout(function () {
+                    //     $('.popup-wrap').hide()
+                    // }, 1500)
+                    that.html('生成')
+                    window.alert("已将数据生成至：" + data);
+                }, function (data) {
+                    isSubmit = false
+                    console.log(data, 'data');
+                    $('.btn').html('生成')
+                    alert(data.responseJSON.message)
+                })
+            }
+        });
+    })
+
+    var api = '/ctl/cb/'
+
+    // 获取数据库列表
+    function getList(cb) {
+        $.ajax(
+            {
+                url: api + 'connections',
+                type: 'GET',
+                contentType: "application/json",
+                success: function (data) {
+                    cb && cb(data)
+                },
+                error: function (data) { /* location.reload() */
+                }
+            }
+        )
+    }
+
+    // 获取数据表列表
+    function getTables(params, cb) {
+        $.ajax(
+            {
+                url: api + 'tables?connectionKey=' + params,
+                type: 'GET',
+                success: function (data) {
+                    cb && cb(data)
+                },
+                error: function (data) { /* location.reload() */
+                }
+            }
+        )
+    }
+
+    // 提交
+    function submit(author, key, tables, cb, errorCallback) {
+        $.ajax(
+            {
+                url: api + 'run?author=' + author + '&connectionKey=' + key + '&tables=' + tables,
+                type: 'GET',
+                contentType: "application/json",
+                success: function (data) {
+                    cb && cb(data)
+                },
+                error: function (data) { /* location.reload() */
+                    errorCallback(data);
+                }
+            }
+        );
+    }
+</script>
+</body>
+
+</html>

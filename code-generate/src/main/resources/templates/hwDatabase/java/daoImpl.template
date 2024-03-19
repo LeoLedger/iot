@@ -1,0 +1,35 @@
+package {@:packageName}.dal.dao.impl;
+
+import hw.topevery.basis.device.I{@:className}Dao;
+import hw.topevery.basis.device.po.{@:className};
+import hw.topevery.basis.device.fetch.{@:className}Fetch;
+import hw.topevery.basis.device.dto.{@:className}DetailDto;
+
+import hw.topevery.basis.framework.base.BaseCrudDaoImpl;
+import hw.topevery.framework.DataFillHelper;
+import hw.topevery.framework.db.CommandType;
+import hw.topevery.framework.db.DataReader;
+import hw.topevery.framework.entity.DbCsp;
+import hw.topevery.framework.entity.Value;
+import hw.topevery.framework.entity.KeyValue;
+import hw.topevery.framework.enums.DbTypeEnum;
+import hw.topevery.framework.util.LogUtil;
+import hw.topevery.framework.db.DbScriptHelper;
+import hw.topevery.framework.db.entity.DataPager;
+import hw.topevery.framework.db.entity.SqlQueryMate;
+import hw.topevery.framework.db.enums.ScriptConditionEnum;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * {@:tableComment} dao
+ *
+ * @author {@:author}
+ * @date {@:date}
+ */
+@Repository
+public class {@:className}Dao extends BaseCrudDaoImpl<{@:className}, {@:className}DetailDto, {@:entityKeyName}, {@:className}Fetch> implements I{@:className}Dao {
+
+}

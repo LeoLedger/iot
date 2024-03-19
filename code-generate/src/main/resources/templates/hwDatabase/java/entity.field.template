@@ -1,0 +1,3 @@
+    /** {@:columnComment} */
+    @DbTableField(columnName = "{@:columnName}", dbType = DbTypeEnum.{@:columnDataType})
+    public {@:fieldClassType} {@:fieldName} {@:defaultValue};
